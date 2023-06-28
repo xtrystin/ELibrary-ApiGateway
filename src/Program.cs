@@ -1,5 +1,6 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,11 +34,15 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("OpenCorsPolicy");
 
+app.UseMetricServer();
+app.UseHttpMetrics(options => options.AddCustomLabel("host", context => context.Request.Host.Host));
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 
 app.MapControllers();
+
 
 app.UseOcelot().Wait();
 app.Run();
