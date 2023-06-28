@@ -34,14 +34,15 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseCors("OpenCorsPolicy");
 
+app.UseMetricServer();
+app.UseHttpMetrics(options => options.AddCustomLabel("host", context => context.Request.Host.Host));
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 
 app.MapControllers();
 
-app.UseMetricServer();
-app.UseHttpMetrics(options => options.AddCustomLabel("host", context => context.Request.Host.Host));
 
 app.UseOcelot().Wait();
 app.Run();
