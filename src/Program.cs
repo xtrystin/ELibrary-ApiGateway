@@ -1,5 +1,6 @@
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,9 @@ app.UseAuthorization();
 
 
 app.MapControllers();
+
+app.UseMetricServer();
+app.UseHttpMetrics(options => options.AddCustomLabel("host", context => context.Request.Host.Host));
 
 app.UseOcelot().Wait();
 app.Run();
